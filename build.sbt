@@ -10,11 +10,11 @@ scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-deprecation", "-feature")
 
 libraryDependencies ++= Seq(
-  "org.sangria-graphql" %% "sangria-marshalling-api" % "0.2.1-SNAPSHOT",
+  "org.sangria-graphql" %% "sangria-marshalling-api" % "0.2.1",
 
   "software.amazon.ion" % "ion-java" % "1.0.0",
 
-  "org.sangria-graphql" %% "sangria-marshalling-testkit" % "0.2.1-SNAPSHOT" % "test",
+  "org.sangria-graphql" %% "sangria-marshalling-testkit" % "0.2.1" % "test",
   "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 )
 
