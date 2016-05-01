@@ -51,7 +51,7 @@ val ClobType = ScalarType[Array[Byte]]("Clob",
 ```
 
 Please notice that  `Date` type produces `java.util.Date` only when this capability is supported by the marshaller. 
-Otherwise it produces a `String` alternative in ISO format. `Clob` type also instructs marshaller to to use Ion `clob` 
+Otherwise it produces a `String` alternative. `Clob` type also instructs marshaller to to use Ion `clob` 
 type instead of `blob` for a byte array.
 
 In order to use Ion marshalling, you also need an implicit instance of `IonSystem` in scope:
