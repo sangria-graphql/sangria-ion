@@ -1,8 +1,12 @@
 package sangria.marshalling
 
+import java.nio.charset.Charset
+import java.util.{TimeZone, Calendar}
+
 import org.scalatest.{Matchers, WordSpec}
 
 import sangria.marshalling.testkit._
+import software.amazon.ion.Timestamp
 import software.amazon.ion.system.IonSystemBuilder
 
 class IonSupportSpec extends WordSpec with Matchers with MarshallingBehaviour with InputHandlingBehaviour with ParsingBehaviour {
@@ -78,6 +82,71 @@ class IonSupportSpec extends WordSpec with Matchers with MarshallingBehaviour wi
       val rendered = ionResultMarshaller.renderCompact(toRender)
 
       rendered should be ("""{a:[null,123,[{foo:"bar"}]],b:{c:true,d:null}}""")
+    }
+
+    val rm = ionResultMarshaller
+    val iu = ionInputUnmarshaller
+
+    val calendar = {
+      val cal = Calendar.getInstance(TimeZone.getTimeZone("CET"))
+      cal.set(2015, 5, 11, 18, 23, 14)
+      cal.set(Calendar.MILLISECOND, 123)
+      cal
+    }
+
+    val bytes = "foo bar".getBytes("UTF-8")
+
+    "marshal `Long` scalar values" in {
+      val marshaled = rm.scalarNode(123434252243534L, "Test", Set.empty)
+
+      marshaled should be (ionSystem.newInt(123434252243534L))
+    }
+
+    "marshal `java.util.Date` scalar values" in {
+      val marshaled = rm.scalarNode(calendar.getTime, "Test", Set.empty)
+
+      marshaled should be (ionSystem.newUtcTimestamp(calendar.getTime))
+    }
+
+    "marshal `java.util.Calendar` scalar values" in {
+      val marshaled = rm.scalarNode(calendar, "Test", Set.empty)
+
+      marshaled should be (ionSystem.newTimestamp(Timestamp.forCalendar(calendar)))
+    }
+
+    "marshal `Timestamp` scalar values" in {
+      val marshaled = rm.scalarNode(Timestamp.forCalendar(calendar), "Test", Set.empty)
+
+      marshaled should be (ionSystem.newTimestamp(Timestamp.forCalendar(calendar)))
+    }
+
+    "marshal `java.sql.Timestamp` scalar values" in {
+      val st = new java.sql.Timestamp(calendar.getTime.getTime)
+      val marshaled = rm.scalarNode(st, "Test", Set.empty)
+
+      marshaled should be (ionSystem.newTimestamp(Timestamp.forSqlTimestampZ(st)))
+    }
+
+    "marshal blob scalar values" in {
+      val marshaled = rm.scalarNode(bytes, "Test", Set.empty)
+
+      marshaled should be (ionSystem.newBlob(bytes))
+    }
+
+    "marshal clob scalar values" in {
+      val marshaled = rm.scalarNode(bytes, "Test", Set(IonClobScalar))
+
+      marshaled should be (ionSystem.newClob(bytes))
+    }
+
+    "marshal string clob scalar values" in {
+      val marshaled = rm.scalarNode("abcdÖ", "Test", Set(IonClobStringScalar(Charset.forName("UTF-8"))))
+
+      marshaled should be (ionSystem.newClob("abcdÖ".getBytes("UTF-8")))
+    }
+
+    "result in error for unsupported scalar values" in {
+      an [IllegalArgumentException] should be thrownBy rm.scalarNode(IonClobScalar, "Test", Set.empty)
     }
   }
 }
