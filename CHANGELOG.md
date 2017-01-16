@@ -1,3 +1,7 @@
+## v1.0.0 (2017-01-16)
+
+* 1.0 Release
+
 ## v0.1.1 (2016-11-03)
 
 * Updated Amazon Ion to v1.0.1

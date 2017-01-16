@@ -5,7 +5,7 @@
 SBT Configuration:
 
 ```scala
-libraryDependencies += "org.sangria-graphql" %% "sangria-ion" % "0.1.1"
+libraryDependencies += "org.sangria-graphql" %% "sangria-ion" % "1.0.0"
 ```
 
 ## Example
