@@ -116,7 +116,7 @@ object ion {
     def getMapKeys(node: IonValue) = node.asInstanceOf[IonStruct].iterator().asScala.map(_.getFieldName).toVector
 
     def isListNode(node: IonValue) = node.isInstanceOf[IonList]
-    def getListValue(node: IonValue) = node.asInstanceOf[IonList].asScala
+    def getListValue(node: IonValue) = node.asInstanceOf[IonList].asScala.toSeq
 
     def isDefined(node: IonValue) = !node.isNullValue
     def getScalarValue(node: IonValue) = node match {
