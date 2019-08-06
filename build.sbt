@@ -6,8 +6,8 @@ description := "Sangria Amazon Ion marshalling"
 homepage := Some(url("http://sangria-graphql.org"))
 licenses := Seq("Apache License, ASL Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
-scalaVersion := "2.12.1"
-crossScalaVersions := Seq("2.11.8", "2.12.1")
+scalaVersion := "2.12.9"
+crossScalaVersions := Seq("2.11.12", "2.12.9", "2.13.0")
 
 scalacOptions ++= Seq("-deprecation", "-feature")
 
@@ -19,12 +19,12 @@ scalacOptions ++= {
 }
 
 libraryDependencies ++= Seq(
-  "org.sangria-graphql" %% "sangria-marshalling-api" % "1.0.0",
+  "org.sangria-graphql" %% "sangria-marshalling-api" % "2.0.0-SNAPSHOT",
 
   "software.amazon.ion" % "ion-java" % "1.0.1",
 
-  "org.sangria-graphql" %% "sangria-marshalling-testkit" % "1.0.0" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "org.sangria-graphql" %% "sangria-marshalling-testkit" % "1.0.3-SNAPSHOT" % Test,
+  "org.scalatest" %% "scalatest" % "3.0.8" % Test
 )
 
 git.remoteRepo := "git@github.com:sangria-graphql/sangria-ion.git"
