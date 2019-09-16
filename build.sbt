@@ -1,6 +1,7 @@
 name := "sangria-ion"
 organization := "org.sangria-graphql"
 version := "1.0.1-SNAPSHOT"
+mimaPreviousArtifacts := Set("org.sangria-graphql" %% "sangria-ion" % "1.0.0")
 
 description := "Sangria Amazon Ion marshalling"
 homepage := Some(url("http://sangria-graphql.org"))
@@ -42,9 +43,8 @@ publishTo := Some(
 
 // Site and docs
 
-site.settings
-site.includeScaladoc()
-ghpages.settings
+enablePlugins(GhpagesPlugin)
+enablePlugins(SiteScaladocPlugin)
 
 // nice *magenta* prompt!
 
