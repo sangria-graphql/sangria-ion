@@ -1,6 +1,6 @@
 name := "sangria-ion"
 organization := "org.sangria-graphql"
-version := "1.0.1-SNAPSHOT"
+version := "2.0.0-SNAPSHOT"
 mimaPreviousArtifacts := Set("org.sangria-graphql" %% "sangria-ion" % "1.0.0")
 
 description := "Sangria Amazon Ion marshalling"
