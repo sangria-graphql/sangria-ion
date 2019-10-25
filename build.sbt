@@ -1,6 +1,5 @@
 name := "sangria-ion"
 organization := "org.sangria-graphql"
-version := "2.0.0-SNAPSHOT"
 mimaPreviousArtifacts := Set("org.sangria-graphql" %% "sangria-ion" % "1.0.0")
 
 description := "Sangria Amazon Ion marshalling"
@@ -31,7 +30,8 @@ libraryDependencies ++= Seq(
 git.remoteRepo := "git@github.com:sangria-graphql/sangria-ion.git"
 
 // Publishing
-
+releaseCrossBuild := true
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishMavenStyle := true
 publishArtifact in Test := false
 pomIncludeRepository := (_ => false)
