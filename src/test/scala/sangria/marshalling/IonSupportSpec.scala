@@ -3,13 +3,14 @@ package sangria.marshalling
 import java.nio.charset.Charset
 import java.util.{TimeZone, Calendar}
 
-import org.scalatest.{Matchers, WordSpec}
 
 import sangria.marshalling.testkit._
 import software.amazon.ion.Timestamp
 import software.amazon.ion.system.IonSystemBuilder
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class IonSupportSpec extends WordSpec with Matchers with MarshallingBehaviour with InputHandlingBehaviour with ParsingBehaviour {
+class IonSupportSpec extends AnyWordSpec with Matchers with MarshallingBehaviour with InputHandlingBehaviour with ParsingBehaviour {
   import sangria.marshalling.ion._
 
   implicit val ionSystem = IonSystemBuilder.standard().build()
