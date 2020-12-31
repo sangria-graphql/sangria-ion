@@ -25,7 +25,7 @@ javacOptions ++= {
 }
 
 libraryDependencies ++= Seq(
-  "org.sangria-graphql" %% "sangria-marshalling-api" % "1.0.4",
+  "org.sangria-graphql" %% "sangria-marshalling-api" % "1.0.5",
 
   "software.amazon.ion" % "ion-java" % "1.5.1",
 
