@@ -4,13 +4,15 @@ mimaPreviousArtifacts := Set("org.sangria-graphql" %% "sangria-ion" % "2.0.0")
 
 description := "Sangria Amazon Ion marshalling"
 homepage := Some(url("http://sangria-graphql.org"))
-licenses := Seq("Apache License, ASL Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
+licenses := Seq(
+  "Apache License, ASL Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 ThisBuild / crossScalaVersions := Seq("2.12.13", "2.13.5")
 ThisBuild / scalaVersion := crossScalaVersions.value.last
 ThisBuild / githubWorkflowPublishTargetBranches := List()
 ThisBuild / githubWorkflowBuildPreamble ++= List(
-  WorkflowStep.Sbt(List("mimaReportBinaryIssues"), name = Some("Check binary compatibility"))
+  WorkflowStep.Sbt(List("mimaReportBinaryIssues"), name = Some("Check binary compatibility")),
+  WorkflowStep.Sbt(List("scalafmtCheckAll"), name = Some("Check formatting"))
 )
 
 scalacOptions ++= Seq("-deprecation", "-feature")
@@ -20,9 +22,7 @@ javacOptions ++= Seq("-source", "8", "-target", "8")
 
 libraryDependencies ++= Seq(
   "org.sangria-graphql" %% "sangria-marshalling-api" % "1.0.5",
-
   "software.amazon.ion" % "ion-java" % "1.5.1",
-
   "org.sangria-graphql" %% "sangria-marshalling-testkit" % "1.0.3" % Test,
   "org.scalatest" %% "scalatest" % "3.2.6" % Test
 )
@@ -37,9 +37,9 @@ publishArtifact in Test := false
 pomIncludeRepository := (_ => false)
 publishTo := Some(
   if (version.value.trim.endsWith("SNAPSHOT"))
-    "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+    "snapshots".at("https://oss.sonatype.org/content/repositories/snapshots")
   else
-    "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+    "releases".at("https://oss.sonatype.org/service/local/staging/deploy/maven2"))
 
 // Site and docs
 
@@ -56,8 +56,13 @@ shellPrompt in ThisBuild := { state =>
 
 startYear := Some(2016)
 organizationHomepage := Some(url("https://github.com/sangria-graphql"))
-developers := Developer("OlegIlyenko", "Oleg Ilyenko", "", url("https://github.com/OlegIlyenko")) :: Nil
-scmInfo := Some(ScmInfo(
-  browseUrl = url("https://github.com/sangria-graphql/sangria-ion.git"),
-  connection = "scm:git:git@github.com:sangria-graphql/sangria-ion.git"
-))
+developers := Developer(
+  "OlegIlyenko",
+  "Oleg Ilyenko",
+  "",
+  url("https://github.com/OlegIlyenko")) :: Nil
+scmInfo := Some(
+  ScmInfo(
+    browseUrl = url("https://github.com/sangria-graphql/sangria-ion.git"),
+    connection = "scm:git:git@github.com:sangria-graphql/sangria-ion.git"
+  ))
