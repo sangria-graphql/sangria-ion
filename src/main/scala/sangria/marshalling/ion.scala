@@ -53,31 +53,35 @@ object ion {
     }
 
     def arrayNode(values: Vector[IonValue]) = system.newList(values: _*)
-    def optionalArrayNodeValue(value: Option[IonValue]) = value match {
-      case Some(v) => v
-      case None => nullNode
-    }
+    def optionalArrayNodeValue(value: Option[IonValue]) =
+      value match {
+        case Some(v) => v
+        case None => nullNode
+      }
 
-    def scalarNode(value: Any, typeName: String, info: Set[ScalarValueInfo]) = value match {
-      case v: String if info.contains(IonClobScalar) => system.newClob(v.getBytes())
-      case v: String if info.exists(_.isInstanceOf[IonClobStringScalar]) =>
-        system.newClob(v.getBytes(info.collectFirst{case IonClobStringScalar(charset) => charset}.get))
-      case v: String => system.newString(v)
-      case v: Boolean => system.newBool(v)
-      case v: Int => system.newInt(v)
-      case v: Long => system.newInt(v)
-      case v: Float => system.newFloat(v)
-      case v: Double => system.newFloat(v)
-      case v: BigInt => system.newInt(v.bigInteger)
-      case v: BigDecimal => system.newDecimal(v.bigDecimal)
-      case v: java.sql.Timestamp => system.newTimestamp(Timestamp.forSqlTimestampZ(v))
-      case v: Date => system.newUtcTimestamp(v)
-      case v: Calendar => system.newTimestamp(Timestamp.forCalendar(v))
-      case v: Timestamp => system.newTimestamp(v)
-      case v: Array[Byte] if info.contains(IonClobScalar) => system.newClob(v)
-      case v: Array[Byte] => system.newBlob(v)
-      case v => throw new IllegalArgumentException("Unsupported scalar value: " + v)
-    }
+    def scalarNode(value: Any, typeName: String, info: Set[ScalarValueInfo]) =
+      value match {
+        case v: String if info.contains(IonClobScalar) => system.newClob(v.getBytes())
+        case v: String if info.exists(_.isInstanceOf[IonClobStringScalar]) =>
+          system.newClob(v.getBytes(info.collectFirst {
+            case IonClobStringScalar(charset) => charset
+          }.get))
+        case v: String => system.newString(v)
+        case v: Boolean => system.newBool(v)
+        case v: Int => system.newInt(v)
+        case v: Long => system.newInt(v)
+        case v: Float => system.newFloat(v)
+        case v: Double => system.newFloat(v)
+        case v: BigInt => system.newInt(v.bigInteger)
+        case v: BigDecimal => system.newDecimal(v.bigDecimal)
+        case v: java.sql.Timestamp => system.newTimestamp(Timestamp.forSqlTimestampZ(v))
+        case v: Date => system.newUtcTimestamp(v)
+        case v: Calendar => system.newTimestamp(Timestamp.forCalendar(v))
+        case v: Timestamp => system.newTimestamp(v)
+        case v: Array[Byte] if info.contains(IonClobScalar) => system.newClob(v)
+        case v: Array[Byte] => system.newBlob(v)
+        case v => throw new IllegalArgumentException("Unsupported scalar value: " + v)
+      }
 
     def enumNode(value: String, typeName: String) = system.newString(value)
 
@@ -86,14 +90,15 @@ object ion {
     def renderPretty(node: IonValue) = renderPrettyValue(system, node)
     def renderCompact(node: IonValue) = renderCompactValue(system, node)
 
-    override def capabilities = Set(
-      IonTimestampSupport,
-      IonSqlTimestampSupport,
-      DateSupport,
-      CalendarSupport,
-      BlobSupport,
-      IonClobSupport,
-      IonClobStringSupport)
+    override def capabilities =
+      Set(
+        IonTimestampSupport,
+        IonSqlTimestampSupport,
+        DateSupport,
+        CalendarSupport,
+        BlobSupport,
+        IonClobSupport,
+        IonClobStringSupport)
   }
 
   implicit def ionResultMarshaller(implicit system: IonSystem) =
@@ -113,40 +118,42 @@ object ion {
     def getMapValue(node: IonValue, key: String) = Option(node.asInstanceOf[IonStruct].get(key))
 
     // preserve order
-    def getMapKeys(node: IonValue) = node.asInstanceOf[IonStruct].iterator().asScala.map(_.getFieldName).toVector
+    def getMapKeys(node: IonValue) =
+      node.asInstanceOf[IonStruct].iterator().asScala.map(_.getFieldName).toVector
 
     def isListNode(node: IonValue) = node.isInstanceOf[IonList]
     def getListValue(node: IonValue) = node.asInstanceOf[IonList].asScala.toSeq
 
     def isDefined(node: IonValue) = !node.isNullValue
-    def getScalarValue(node: IonValue) = node match {
-      case v: IonBool => v.booleanValue
-      case v: IonText => v.stringValue
-      case v: IonFloat => v.doubleValue
-      case v: IonInt => BigInt(v.bigIntegerValue)
-      case v: IonDecimal => BigDecimal(v.bigDecimalValue)
-      case v: IonClob => v.stringValue(Charset.forName("UTF-8"))
-      case v => throw new IllegalStateException(s"'$v' is not a supported scalar value")
-    }
+    def getScalarValue(node: IonValue) =
+      node match {
+        case v: IonBool => v.booleanValue
+        case v: IonText => v.stringValue
+        case v: IonFloat => v.doubleValue
+        case v: IonInt => BigInt(v.bigIntegerValue)
+        case v: IonDecimal => BigDecimal(v.bigDecimalValue)
+        case v: IonClob => v.stringValue(Charset.forName("UTF-8"))
+        case v => throw new IllegalStateException(s"'$v' is not a supported scalar value")
+      }
 
     def getScalaScalarValue(node: IonValue) = getScalarValue(node)
 
-
     def isEnumNode(node: IonValue) = node.isInstanceOf[IonText] || node.isInstanceOf[IonClob]
-    def isScalarNode(node: IonValue) = node match {
-      case _: IonBool | _: IonText | _: IonFloat | _ : IonInt | _: IonDecimal | _: IonClob => true
-      case _ => false
-    }
+    def isScalarNode(node: IonValue) =
+      node match {
+        case _: IonBool | _: IonText | _: IonFloat | _: IonInt | _: IonDecimal | _: IonClob => true
+        case _ => false
+      }
 
     def isVariableNode(node: IonValue) = false
-    def getVariableName(node: IonValue) = throw new IllegalArgumentException("variables are not supported")
+    def getVariableName(node: IonValue) =
+      throw new IllegalArgumentException("variables are not supported")
 
     def render(node: IonValue) = renderCompactValue(system, node)
   }
 
   implicit def ionInputUnmarshaller(implicit system: IonSystem) =
     new IonInputUnmarshaller(system)
-
 
   class IonToInput(system: IonSystem) extends ToInput[IonValue, IonValue] {
     def toInput(value: IonValue) = (value, ionInputUnmarshaller(system))
@@ -193,6 +200,5 @@ object ion {
 
   implicit def ionInputParser(implicit system: IonSystem) =
     new IonInputParser(system)
-
 
 }
