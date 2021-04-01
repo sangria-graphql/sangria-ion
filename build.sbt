@@ -33,7 +33,7 @@ git.remoteRepo := "git@github.com:sangria-graphql/sangria-ion.git"
 releaseCrossBuild := true
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishMavenStyle := true
-publishArtifact in Test := false
+Test / publishArtifact := false
 pomIncludeRepository := (_ => false)
 publishTo := Some(
   if (version.value.trim.endsWith("SNAPSHOT"))
@@ -42,18 +42,15 @@ publishTo := Some(
     "releases".at("https://oss.sonatype.org/service/local/staging/deploy/maven2"))
 
 // Site and docs
-
 enablePlugins(GhpagesPlugin)
 enablePlugins(SiteScaladocPlugin)
 
 // nice *magenta* prompt!
-
-shellPrompt in ThisBuild := { state =>
+ThisBuild / shellPrompt := { state =>
   scala.Console.MAGENTA + Project.extract(state).currentRef.project + "> " + scala.Console.RESET
 }
 
 // Additional meta-info
-
 startYear := Some(2016)
 organizationHomepage := Some(url("https://github.com/sangria-graphql"))
 developers := Developer(
