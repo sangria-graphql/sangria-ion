@@ -2,9 +2,8 @@ package sangria.marshalling
 
 import java.nio.charset.Charset
 import java.util.{Calendar, TimeZone}
-
 import sangria.marshalling.testkit._
-import software.amazon.ion.Timestamp
+import software.amazon.ion.{IonSystem, IonValue, Timestamp}
 import software.amazon.ion.system.IonSystemBuilder
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -17,7 +16,7 @@ class IonSupportSpec
     with ParsingBehaviour {
   import sangria.marshalling.ion._
 
-  implicit val ionSystem = IonSystemBuilder.standard().build()
+  implicit val ionSystem: IonSystem = IonSystemBuilder.standard().build()
 
   "Ion integration" should {
     behave.like(`value (un)marshaller`(ionResultMarshaller))
@@ -36,7 +35,7 @@ class IonSupportSpec
       )))
   }
 
-  val toRender =
+  val toRender: IonValue =
     ionSystem.getLoader
       .load("""
       {a:[null,123,[
@@ -92,7 +91,6 @@ class IonSupportSpec
     }
 
     val rm = ionResultMarshaller
-    val iu = ionInputUnmarshaller
 
     val calendar = {
       val cal = Calendar.getInstance(TimeZone.getTimeZone("CET"))
