@@ -87,8 +87,8 @@ object ion {
 
     def nullNode = system.newNull()
 
-    def renderPretty(node: IonValue) = renderPrettyValue(system, node)
-    def renderCompact(node: IonValue) = renderCompactValue(system, node)
+    def renderPretty(node: IonValue): String = renderPrettyValue(system, node)
+    def renderCompact(node: IonValue): String = renderCompactValue(system, node)
 
     override def capabilities =
       Set(
@@ -101,30 +101,30 @@ object ion {
         IonClobStringSupport)
   }
 
-  implicit def ionResultMarshaller(implicit system: IonSystem) =
+  implicit def ionResultMarshaller(implicit system: IonSystem): IonResultMarshaller =
     new IonResultMarshaller(system)
 
   class IonMarshallerForType(system: IonSystem) extends ResultMarshallerForType[IonValue] {
     val marshaller = new IonResultMarshaller(system)
   }
 
-  implicit def ionMarshallerForType(implicit system: IonSystem) =
+  implicit def ionMarshallerForType(implicit system: IonSystem): IonMarshallerForType =
     new IonMarshallerForType(system)
 
   class IonInputUnmarshaller(system: IonSystem) extends InputUnmarshaller[IonValue] {
     def getRootMapValue(node: IonValue, key: String) = Option(node.asInstanceOf[IonStruct].get(key))
 
-    def isMapNode(node: IonValue) = node.isInstanceOf[IonStruct]
+    def isMapNode(node: IonValue): Boolean = node.isInstanceOf[IonStruct]
     def getMapValue(node: IonValue, key: String) = Option(node.asInstanceOf[IonStruct].get(key))
 
     // preserve order
     def getMapKeys(node: IonValue) =
       node.asInstanceOf[IonStruct].iterator().asScala.map(_.getFieldName).toVector
 
-    def isListNode(node: IonValue) = node.isInstanceOf[IonList]
+    def isListNode(node: IonValue): Boolean = node.isInstanceOf[IonList]
     def getListValue(node: IonValue) = node.asInstanceOf[IonList].asScala.toSeq
 
-    def isDefined(node: IonValue) = !node.isNullValue
+    def isDefined(node: IonValue): Boolean = !node.isNullValue
     def getScalarValue(node: IonValue) =
       node match {
         case v: IonBool => v.booleanValue
@@ -138,8 +138,9 @@ object ion {
 
     def getScalaScalarValue(node: IonValue) = getScalarValue(node)
 
-    def isEnumNode(node: IonValue) = node.isInstanceOf[IonText] || node.isInstanceOf[IonClob]
-    def isScalarNode(node: IonValue) =
+    def isEnumNode(node: IonValue): Boolean =
+      node.isInstanceOf[IonText] || node.isInstanceOf[IonClob]
+    def isScalarNode(node: IonValue): Boolean =
       node match {
         case _: IonBool | _: IonText | _: IonFloat | _: IonInt | _: IonDecimal | _: IonClob => true
         case _ => false
@@ -149,28 +150,28 @@ object ion {
     def getVariableName(node: IonValue) =
       throw new IllegalArgumentException("variables are not supported")
 
-    def render(node: IonValue) = renderCompactValue(system, node)
+    def render(node: IonValue): String = renderCompactValue(system, node)
   }
 
-  implicit def ionInputUnmarshaller(implicit system: IonSystem) =
+  implicit def ionInputUnmarshaller(implicit system: IonSystem): IonInputUnmarshaller =
     new IonInputUnmarshaller(system)
 
   class IonToInput(system: IonSystem) extends ToInput[IonValue, IonValue] {
     def toInput(value: IonValue) = (value, ionInputUnmarshaller(system))
   }
 
-  implicit def ionToInput(implicit system: IonSystem) =
+  implicit def ionToInput(implicit system: IonSystem): IonToInput =
     new IonToInput(system)
 
   class IonFromInput(system: IonSystem) extends FromInput[IonValue] {
     val marshaller = ionResultMarshaller(system)
-    def fromResult(node: marshaller.Node) = node
+    def fromResult(node: marshaller.Node) = node.asInstanceOf[IonValue]
   }
 
-  implicit def ionFromInput(implicit system: IonSystem) =
+  implicit def ionFromInput(implicit system: IonSystem): IonFromInput =
     new IonFromInput(system)
 
-  private def renderPrettyValue(system: IonSystem, value: IonValue) = {
+  private def renderPrettyValue(system: IonSystem, value: IonValue): String = {
     val buf = new StringBuffer
     val writer = IonTextWriterBuilder.pretty().build(buf)
 
@@ -182,7 +183,7 @@ object ion {
     } finally writer.close()
   }
 
-  private def renderCompactValue(system: IonSystem, value: IonValue) = {
+  private def renderCompactValue(system: IonSystem, value: IonValue): String = {
     val buf = new StringBuffer
     val writer = IonTextWriterBuilder.standard().build(buf)
 
@@ -195,10 +196,10 @@ object ion {
   }
 
   class IonInputParser(system: IonSystem) extends InputParser[IonValue] {
-    def parse(str: String) = Try(system.getLoader.load(str).get(0))
+    def parse(str: String): Try[IonValue] = Try(system.getLoader.load(str).get(0))
   }
 
-  implicit def ionInputParser(implicit system: IonSystem) =
+  implicit def ionInputParser(implicit system: IonSystem): IonInputParser =
     new IonInputParser(system)
 
 }
