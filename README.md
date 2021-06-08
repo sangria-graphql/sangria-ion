@@ -1,4 +1,4 @@
-[Sangria](http://sangria-graphql.org/) [Amazon Ion](http://amznlabs.github.io/ion-docs/index.html) marshalling.
+[Sangria](https://sangria-graphql.github.io/) [Amazon Ion](https://amzn.github.io/ion-docs/index.html) marshalling.
 
 ![Continuous Integration](https://github.com/sangria-graphql/sangria-ion/workflows/Continuous%20Integration/badge.svg)
 [![Coverage Status](http://coveralls.io/repos/sangria-graphql/sangria-ion/badge.svg?branch=master&service=github)](http://coveralls.io/github/sangria-graphql/sangria-ion?branch=master)
@@ -72,4 +72,4 @@ Now you should be able to write `IonValue` to a binary or a text format.
 
 ## License
 
-**sangria-ion** is licensed under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+**sangria-ion** is licensed under [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
