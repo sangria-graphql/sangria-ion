@@ -12,13 +12,11 @@ import scala.util.Try
 object ion {
   sealed trait IonScalarInfo extends ScalarValueInfo
 
-  /**
-    * Instructs marshaller to encode `Array[Byte]` and `String` as `clob` ion type
+  /** Instructs marshaller to encode `Array[Byte]` and `String` as `clob` ion type
     */
   case object IonClobScalar extends IonScalarInfo
 
-  /**
-    * Instructs marshaller to encode `String` as `clob` ion type with provided charset
+  /** Instructs marshaller to encode `String` as `clob` ion type with provided charset
     */
   case class IonClobStringScalar(charset: Charset) extends IonScalarInfo
 
@@ -45,8 +43,8 @@ object ion {
     def mapNode(keyValues: Seq[(String, IonValue)]) = {
       val struct = system.newEmptyStruct()
 
-      keyValues.foreach {
-        case (k, v) => struct.put(k, v)
+      keyValues.foreach { case (k, v) =>
+        struct.put(k, v)
       }
 
       struct
@@ -63,8 +61,8 @@ object ion {
       value match {
         case v: String if info.contains(IonClobScalar) => system.newClob(v.getBytes())
         case v: String if info.exists(_.isInstanceOf[IonClobStringScalar]) =>
-          system.newClob(v.getBytes(info.collectFirst {
-            case IonClobStringScalar(charset) => charset
+          system.newClob(v.getBytes(info.collectFirst { case IonClobStringScalar(charset) =>
+            charset
           }.get))
         case v: String => system.newString(v)
         case v: Boolean => system.newBool(v)
