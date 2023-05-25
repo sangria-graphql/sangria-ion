@@ -37,7 +37,7 @@ libraryDependencies ++= Seq(
   "org.sangria-graphql" %% "sangria-marshalling-api" % "1.0.8",
   "software.amazon.ion" % "ion-java" % "1.5.1",
   "org.sangria-graphql" %% "sangria-marshalling-testkit" % "1.0.4" % Test,
-  "org.scalatest" %% "scalatest" % "3.2.15" % Test
+  "org.scalatest" %% "scalatest" % "3.2.16" % Test
 )
 
 git.remoteRepo := "git@github.com:sangria-graphql/sangria-ion.git"
