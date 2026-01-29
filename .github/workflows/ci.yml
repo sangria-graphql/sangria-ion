@@ -35,7 +35,7 @@ jobs:
       - name: Setup Java 17
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
+          distribution: zulu
           java-version: 17
           cache: sbt
 
@@ -82,7 +82,7 @@ jobs:
       - name: Setup Java 17
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
+          distribution: zulu
           java-version: 17
           cache: sbt
 
