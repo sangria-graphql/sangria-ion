@@ -18,6 +18,7 @@ licenses := Seq(
 
 ThisBuild / crossScalaVersions := Seq("2.12.21", "2.13.18", "3.7.4")
 ThisBuild / scalaVersion := crossScalaVersions.value.last
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.zulu("17"))
 ThisBuild / githubWorkflowPublishTargetBranches := List()
 ThisBuild / githubWorkflowBuildPreamble ++= List(
   WorkflowStep.Sbt(List("mimaReportBinaryIssues"), name = Some("Check binary compatibility")),
@@ -40,8 +41,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.20" % Test
 )
 
-git.remoteRepo := "git@github.com:sangria-graphql/sangria-ion.git"
-
 // Release
 ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
 ThisBuild / githubWorkflowPublishTargetBranches :=
@@ -57,10 +56,6 @@ ThisBuild / githubWorkflowPublish := Seq(
     )
   )
 )
-
-// Site and docs
-enablePlugins(GhpagesPlugin)
-enablePlugins(SiteScaladocPlugin)
 
 // nice *magenta* prompt!
 ThisBuild / shellPrompt := { state =>
